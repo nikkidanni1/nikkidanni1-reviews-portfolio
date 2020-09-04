@@ -1,0 +1,6 @@
+back/.vercel
+back/node_modules
+
+front/.vercel
+front/node_modules
+node_modules
