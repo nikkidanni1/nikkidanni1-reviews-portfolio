@@ -36,12 +36,13 @@ module.exports = (app) => {
 		Product.find()
 			.exec()
 			.then((products) => {
-				res.send(
-					products
-						.filter((item) => (req.query.type === '' ? true : item.type === req.query.type))
-						.filter((item) => (req.query.searchword === '' ? true : item.name.includes(req.query.searchword)))
-						.filter((item, index) => req.query.from <= index && index < req.query.from + req.query.count)
-				);
+				const data = products
+					.filter((item) => (req.query.type === '' ? true : item.type === req.query.type))
+					.filter((item) => (req.query.searchword === '' ? true : item.name.includes(req.query.searchword)));
+				res.send({
+					count: data.length,
+					data: data.filter((item, index) => req.query.from <= index && index < req.query.from + req.query.count),
+				});
 			});
 	});
 

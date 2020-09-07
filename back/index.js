@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const routes = require('./routes');
+var cors = require('cors');
 
 require('./models/index');
 
@@ -44,7 +45,9 @@ const Review = mongoose.model('Review');
 // }
 
 const app = express();
-app.use(bodyParser.json(), bodyParser.raw());
+var cors = require('cors');
+
+app.use(bodyParser.json(), bodyParser.raw(), cors());
 app.set('port', process.env.PORT || 3000);
 
 mongoose.set('useFindAndModify', false);
