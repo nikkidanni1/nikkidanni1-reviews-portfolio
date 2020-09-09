@@ -48,6 +48,7 @@ const app = express();
 var cors = require('cors');
 
 app.use(bodyParser.json(), bodyParser.raw(), cors());
+app.options('*', cors());
 app.set('port', process.env.PORT || 3000);
 
 mongoose.set('useFindAndModify', false);

@@ -58,7 +58,6 @@ module.exports = (app) => {
 	app.post('/products', async function (req, res) {
 		const data = req.body;
 		const paths = Product.schema.paths;
-
 		for (const key in paths) {
 			if (!/(^_[\w]+)|id|ratingValue|ratingCount/.test(key) && !data[key]) {
 				res.status(400).send({ message: `${key} required` });
@@ -97,7 +96,7 @@ module.exports = (app) => {
 			.exec()
 			.then((photo) => {
 				res.writeHead(200, {
-					'Content-Type': 'image/png',
+					'Content-Type': 'image/*',
 					'Content-Length': photo.photo.length,
 				});
 				res.end(photo.photo);
@@ -121,7 +120,8 @@ module.exports = (app) => {
 			.exec()
 			.then((photos) => {
 				if (5242880 >= req.body.byteLength) {
-					const id = photos[photos.length] ? photos[photos.length].id + 1 : 1;
+					const id = photos[photos.length - 1] ? photos[photos.length - 1].id + 1 : 1;
+					
 					Photo.create({
 						id,
 						photo: req.body,

@@ -6,7 +6,7 @@ import Pagination from 'components/Pagination'
 
 import { getProducts } from 'api'
 
-const PRODUCTS_ON_PAGE = 10
+const PRODUCTS_ON_PAGE = 6
 
 const Products = () => {
 	const [loading, setLoading] = useState(true)
