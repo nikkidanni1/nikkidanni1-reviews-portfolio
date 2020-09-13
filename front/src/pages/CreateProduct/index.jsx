@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import * as yup from 'yup'
 import { Formik } from 'formik'
+import { connect } from 'react-redux'
+import { addTypes } from 'index.js'
 
 import Layout from 'components/Layout'
 import Navigation from './components/Navigation'
@@ -27,19 +29,20 @@ const schema = yup.object({
 		.test('fileType', 'Unsupported File Format', (value) => SUPPORTED_FORMATS.includes(value.type)),
 })
 
-const CreateProduct = ({ history }) => {
+const CreateProduct = ({ history, types, addTypes }) => {
 	const [isLoading, setLoading] = useState(false)
 	const [trySend, setTrySend] = useState(false)
-	const [types, setTypes] = useState(['- Not Selected -'])
 
 	useEffect(() => {
-		getTypesByApi()
+		if (types.length < 2) {
+			getTypesByApi()
+		}
 	}, [])
 
 	const getTypesByApi = async () => {
 		setLoading(true)
 		const typesByApi = await getTypes()
-		setTypes(['- Not Selected -', ...typesByApi])
+		addTypes(['- Not Selected -', ...typesByApi])
 		setLoading(false)
 	}
 
@@ -66,7 +69,11 @@ const CreateProduct = ({ history }) => {
 		<Layout loading={isLoading}>
 			<Navigation history={history} />
 			<Card bg={'dark'} text={'white'} className='mb-2 create-product_form-wrapper'>
-				<Formik validationSchema={schema} onSubmit={onSubmit} initialValues={{ name: '', description: '', type: '- Not Selected -' }}>
+				<Formik
+					validationSchema={schema}
+					onSubmit={onSubmit}
+					initialValues={{ name: '', description: '', type: '- Not Selected -' }}
+				>
 					{({ handleSubmit, handleChange, setFieldValue, handleBlur, values, touched, isValid, errors }) => (
 						<Form>
 							<Form.Group controlId='validationFormik01'>
@@ -140,4 +147,16 @@ const CreateProduct = ({ history }) => {
 	)
 }
 
-export default CreateProduct
+const mapStateToProps = (state) => {
+	return {
+		types: state.types,
+	}
+}
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		addTypes: (payload) => dispatch(addTypes(payload)),
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateProduct)
